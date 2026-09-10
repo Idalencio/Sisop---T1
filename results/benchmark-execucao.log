@@ -1,0 +1,25 @@
+aquecimento 1/1 sequencial T0: 0.307023158 s; objetos=7909
+aquecimento 1/1 paralelo T2: 0.288904528 s; objetos=7909
+aquecimento 1/1 paralelo T4: 0.452595936 s; objetos=7909
+aquecimento 1/1 paralelo T8: 0.518672664 s; objetos=7909
+medicao 1/5 sequencial T0: 0.595341406 s; objetos=7909
+medicao 1/5 paralelo T2: 0.401152512 s; objetos=7909
+medicao 1/5 paralelo T4: 0.192030292 s; objetos=7909
+medicao 1/5 paralelo T8: 0.205564558 s; objetos=7909
+medicao 2/5 paralelo T8: 0.207392972 s; objetos=7909
+medicao 2/5 paralelo T4: 0.187944992 s; objetos=7909
+medicao 2/5 paralelo T2: 0.239069914 s; objetos=7909
+medicao 2/5 sequencial T0: 0.372748448 s; objetos=7909
+medicao 3/5 sequencial T0: 0.291875081 s; objetos=7909
+medicao 3/5 paralelo T2: 0.262930838 s; objetos=7909
+medicao 3/5 paralelo T4: 0.250764474 s; objetos=7909
+medicao 3/5 paralelo T8: 0.173738357 s; objetos=7909
+medicao 4/5 paralelo T8: 0.246031305 s; objetos=7909
+medicao 4/5 paralelo T4: 0.187359316 s; objetos=7909
+medicao 4/5 paralelo T2: 0.275011960 s; objetos=7909
+medicao 4/5 sequencial T0: 0.262813266 s; objetos=7909
+medicao 5/5 sequencial T0: 0.317325669 s; objetos=7909
+medicao 5/5 paralelo T2: 0.421328366 s; objetos=7909
+medicao 5/5 paralelo T4: 0.361749008 s; objetos=7909
+medicao 5/5 paralelo T8: 0.381865758 s; objetos=7909
+PASSOU: 24 amostras; resultados em /root/t1/results

@@ -1,0 +1,8 @@
+bin/
+__pycache__/
+*.pyc
+*.o
+results/matriz-benchmark.txt
+slides/.build/
+.validation/
+.DS_Store
