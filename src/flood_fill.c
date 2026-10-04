@@ -46,6 +46,7 @@ int rotular_faixa(const Matriz *matriz, size_t *rotulos,
          semente < fim * matriz->colunas; ++semente) {
         if (matriz->celulas[semente] == 0 || rotulos[semente] != 0)
             continue;
+        /* O indice global evita repetir IDs em faixas diferentes. */
         id = semente + 1;
         if (!empilhar(&pilha, semente, limite)) {
             free(pilha.itens);
@@ -79,3 +80,4 @@ int rotular_faixa(const Matriz *matriz, size_t *rotulos,
     free(pilha.itens);
     return 1;
 }
+

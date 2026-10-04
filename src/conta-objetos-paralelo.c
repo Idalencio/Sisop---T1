@@ -82,6 +82,7 @@ static int contar_paralelo(const Matriz *matriz, size_t quantidade,
     ok = threads != NULL && faixas != NULL && rotulos != NULL;
     criadas = 0;
     linha = 0;
+    /* Divide as linhas sem deixar buracos nem faixas vazias. */
     base = matriz->linhas / quantidade;
     resto = matriz->linhas % quantidade;
     for (i = 0; ok && i < quantidade; ++i) {
@@ -99,6 +100,7 @@ static int contar_paralelo(const Matriz *matriz, size_t quantidade,
         }
     }
     *objetos = 0;
+    /* Todos foram criados antes de esperar; as faixas trabalham juntas. */
     for (i = 0; i < criadas; ++i) {
         codigo = pthread_join(threads[i], NULL);
         if (codigo != 0) {
@@ -118,6 +120,7 @@ static int contar_paralelo(const Matriz *matriz, size_t quantidade,
     if (ok) {
         for (i = 0; i <= matriz->total; ++i)
             parent[i] = i;
+        /* Os trabalhadores terminaram. So a principal une as fronteiras. */
         for (i = 1; i < quantidade; ++i) {
             inferior = faixas[i].inicio * matriz->colunas;
             superior = inferior - matriz->colunas;
@@ -127,6 +130,7 @@ static int contar_paralelo(const Matriz *matriz, size_t quantidade,
                     continue;
                 primeira = c > 0 ? c - 1 : 0;
                 ultima = c + 1 < matriz->colunas ? c + 1 : c;
+                /* Inclui as duas diagonais, alem do vizinho abaixo. */
                 for (vizinha = primeira; vizinha <= ultima; ++vizinha) {
                     b = rotulos[inferior + vizinha];
                     if (b != 0 && unir(parent, rank, a, b))
@@ -174,3 +178,4 @@ int main(int argc, char **argv)
            (unsigned long)objetos, fim - inicio, (unsigned long)quantidade);
     return EXIT_SUCCESS;
 }
+

@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -O2 -std=c89 -Wall -Wextra -pedantic -pthread
+CFLAGS = -O2 -std=c89 -Wall -Wextra -Werror -pedantic -pthread
 LDLIBS = -pthread
 PYTHON = python3
 COMUM = src/matriz.c src/flood_fill.c
@@ -31,3 +31,4 @@ benchmark: all
 
 clean:
 	rm -f bin/conta-objetos-sequencial bin/conta-objetos-paralelo
+

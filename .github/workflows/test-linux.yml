@@ -1,0 +1,80 @@
+name: Teste Linux
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Makefile'
+      - 'src/**'
+      - 'tests/**'
+      - '.github/workflows/test-linux.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'Makefile'
+      - 'src/**'
+      - 'tests/**'
+      - '.github/workflows/test-linux.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  compilar-e-testar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o repositório
+        uses: actions/checkout@v4
+
+      - name: Mostrar ambiente
+        run: |
+          uname -a
+          cc --version | head -n 1
+          python3 --version
+
+      - name: Compilar em C89
+        run: make clean all
+
+      - name: Rodar testes
+        run: make test
+
+      - name: Medir desempenho
+        env:
+          CFLAGS: -O2 -std=c89 -Wall -Wextra -Werror -pedantic -pthread
+        run: >-
+          python3 tests/benchmark.py
+          --execution-environment "GitHub-hosted runner ubuntu-latest (Linux)"
+
+      - name: Mostrar resumo
+        if: always()
+        run: |
+          if [ -f results/resultados.md ]; then cat results/resultados.md >> "$GITHUB_STEP_SUMMARY"; fi
+          if [ -f results/desempenho.md ]; then cat results/desempenho.md >> "$GITHUB_STEP_SUMMARY"; fi
+
+      - name: Atualizar resultados aprovados no repositório
+        if: success() && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/validacao.json results/resultados.md \
+            results/desempenho.json results/desempenho.csv results/desempenho.md
+          if ! git diff --cached --quiet; then
+            git commit -m "Registra testes executados no Linux"
+            git push origin HEAD:main
+          fi
+
+      - name: Guardar resultados desta execução
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resultados-linux-${{ github.run_id }}
+          path: |
+            results/validacao.json
+            results/resultados.md
+            results/desempenho.json
+            results/desempenho.csv
+            results/desempenho.md
+          if-no-files-found: warn
+          retention-days: 30
+

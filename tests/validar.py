@@ -96,6 +96,12 @@ def dirigidos():
         ("diagonal_esquerda_na_fronteira", [[0, 0], [0, 1], [1, 0], [0, 0]], 1),
         ("uma_linha", [[1, 1, 0, 1, 0, 1]], 3),
         ("uma_coluna", [[1], [0], [1], [1], [0], [1]], 3),
+        ("ponte_une_dois_componentes", [[1, 0, 1], [1, 0, 1],
+                                        [1, 1, 1], [0, 0, 0]], 1),
+        ("reconexao_nao_desconta_duas_vezes", [[1, 1, 1, 1, 1],
+                                               [1, 0, 0, 0, 1],
+                                               [1, 0, 0, 0, 1],
+                                               [1, 1, 1, 1, 1]], 1),
     ]
 
 
@@ -221,7 +227,7 @@ def main():
                   "; ".join("T{}: {}".format(r["solicitadas"], r["objetos"]) for r in par) or "nao executado"))
     md += ["", "- {} execucoes concluidas e registradas em `validacao.json`.".format(len(registros)),
            "- Referencia independente: Union-Find das adjacencias, sem flood fill ou particionamento.",
-           "- Cobertura planejada: 5 exemplos do PDF, 12 casos dirigidos, todas as 64 matrizes 2 x 3,",
+           "- Cobertura planejada: 5 exemplos do PDF, {} casos dirigidos, todas as 64 matrizes 2 x 3,".format(len(dirigidos())),
            "  {} matrizes aleatorias e entradas invalidas.".format(args.random_cases),
            "- Paralelo: T = 1, 2, 3, 4, 8 e linhas + 5; valores repetidos sao executados uma vez.",
            "- Um resultado PASSOU exige a conclusao de toda a cobertura indicada para o modo selecionado."]
@@ -237,3 +243,4 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
+

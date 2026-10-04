@@ -1,153 +1,76 @@
-# Sistemas Operacionais — T1
+# Contagem de objetos em matriz binária
 
-**Pedro Rocha Idalencio**  
-PUCRS — 2026/2 — Turma 330
+Trabalho de Sistemas Operacionais, PUCRS, 2026/2.
 
-Programa em C89 que conta objetos em uma matriz binária. O valor 0 representa
-o fundo e o valor 1 representa parte de um objeto. Células ligadas pelos lados
-ou pelas diagonais pertencem ao mesmo objeto (conectividade 8).
+**Autor:** Pedro Rocha Idalencio
 
-## Como executar
+O programa recebe uma matriz com valores `0` e `1` e conta os grupos de `1`.
+Consideramos vizinhos os lados e as diagonais, como pede a conectividade 8.
 
-É necessário Linux ou macOS com compilador C, Make e suporte a Pthreads e
-`clock_gettime`. Python 3 é usado apenas nos testes e no benchmark.
-Os comandos abaixo são para um terminal Linux/macOS, dentro da pasta do projeto.
+## Como compilar e executar
+
+É necessário Linux ou macOS com compilador C, `make` e Pthreads. Python 3 é
+usado pelos testes e pelo benchmark.
 
 ```sh
+make clean
 make
 ./bin/conta-objetos-sequencial tests/exemplos/exemplo5.txt
 ./bin/conta-objetos-paralelo tests/exemplos/exemplo5.txt 4
-```
-
-O último argumento do paralelo é a quantidade de threads. Se esse número for
-maior que a quantidade de linhas, o programa usa uma thread por linha.
-A saída informa a quantidade de objetos, o tempo de processamento e, no
-paralelo, as threads efetivamente usadas.
-
-A compilação usa `-O2 -std=c89 -Wall -Wextra -pedantic -pthread`.
-Para remover os executáveis gerados, use `make clean`.
-
-## Formato da entrada
-
-O arquivo começa com a quantidade de linhas e colunas, seguida dos valores
-da matriz. Por exemplo:
-
-```text
-3 3
-1 0 0
-0 1 0
-0 0 1
-```
-
-Essa matriz tem um objeto, pois as diagonais conectam os três valores 1.
-A entrada deve ter exatamente a quantidade indicada de valores, todos 0 ou 1.
-
-## Implementação
-
-O sequencial percorre a matriz. Ao encontrar um 1 ainda não visitado, aumenta
-a contagem e usa flood fill para marcar o componente. A busca usa uma pilha
-dinâmica, sem recursão. As células são marcadas na inserção na pilha.
-
-O paralelo divide as linhas em faixas. As linhas restantes da divisão são
-distribuídas entre as primeiras threads. Cada thread executa o flood fill
-somente na sua faixa e gera rótulos usando o índice da semente mais 1.
-
-A matriz de entrada é compartilhada apenas para leitura. Cada thread escreve
-nos rótulos da própria faixa e usa pilha e contagem locais. Por isso, não é
-necessário mutex durante essa etapa.
-
-Depois dos `pthread_join`, a principal reúne as contagens. Para corrigir
-objetos que atravessam faixas, compara cada célula da última linha de uma
-faixa com as colunas c-1, c e c+1 da primeira linha da próxima. Union-Find,
-com compressão de caminho e união por rank, reúne os rótulos conectados.
-A contagem diminui somente quando duas raízes diferentes são unidas.
-
-O sequencial tem tempo O(N), para N células. O trabalho local pode ser
-dividido entre as threads, mas as inicializações e a consolidação continuam
-sequenciais. A memória total é O(N + T), com T threads. Mais threads não
-garantem menor tempo.
-
-Erros de entrada, alocação, relógio e Pthreads são verificados. Se uma criação
-falhar, as threads já iniciadas são aguardadas. Uma falha irrecuperável no
-join encerra o processo sem liberar buffers que ainda possam estar em uso.
-
-## Organização
-
-- `src/`: implementações sequencial, paralela, leitura e flood fill.
-- `tests/`: cinco exemplos do enunciado, validação e benchmark.
-- `results/`: registros dos testes, tempos e verificações de memória.
-- `Makefile`: compilação e execução dos testes.
-
-## Testes
-
-```sh
 make test
-```
-
-| Exemplo | Esperado | Sequencial | Paralelo |
-| --- | ---: | ---: | ---: |
-| 1 | 3 | 3 | 3 |
-| 2 | 4 | 4 | 4 |
-| 3 | 5 | 5 | 5 |
-| 4 | 6 | 6 | 6 |
-| 5 | 7 | 7 | 7 |
-
-A suíte completa passou em 1.305 execuções. Inclui os cinco exemplos, casos
-de fronteira e diagonal, 64 matrizes 2 x 3, 100 matrizes aleatórias com seed
-fixa e entradas inválidas. A referência independente usa as adjacências
-da matriz. Os registros estão em `results/validacao.json`.
-
-A compilação também foi verificada com `-Werror`, sem warnings. No exemplo 5,
-Valgrind Memcheck não encontrou erros nem vazamentos nas duas versões.
-DRD terminou com zero erros não suprimidos no paralelo com quatro threads;
-houve 155 ocorrências suprimidas em 50 contextos, sem supressões personalizadas.
-Helgrind falhou com uma asserção interna, portanto essa verificação não foi
-concluída. Os logs foram mantidos. Falhas de alocação e Pthreads não foram
-injetadas artificialmente nos testes.
-
-## Desempenho
-
-```sh
 make benchmark
 ```
 
-Matriz 1024 x 1024, densidade 0,45 e seed 20260910. Foi feito um aquecimento
-e cinco medições por configuração, alternando a ordem. A mediana reduz o
-peso de execuções isoladamente lentas.
+O arquivo de entrada começa com número de linhas e colunas. Depois vêm os
+valores da matriz, separados por espaços ou quebras de linha. A versão
+paralela recebe também a quantidade de threads. Ela limita esse número ao
+número de linhas para não criar faixas vazias.
 
-| Configuração | Mediana (s) | Speedup |
-| --- | ---: | ---: |
-| Sequencial | 0,317326 | 1,000 |
-| 2 threads | 0,275012 | 1,154 |
-| 4 threads | 0,192030 | 1,652 |
-| 8 threads | 0,207393 | 1,530 |
+## Organização e algoritmo
 
-Speedup = tempo sequencial / tempo paralelo. O relógio monotônico mede o
-processamento, incluindo alocações, criação/join e consolidação, mas não
-a leitura do arquivo nem a impressão.
+- `src/conta-objetos-sequencial.c`: versão de referência.
+- `src/conta-objetos-paralelo.c`: criação das threads e consolidação.
+- `src/matriz.c` e `src/flood_fill.c`: leitura da matriz e busca dos grupos.
+- `tests/exemplos/`: cinco matrizes do enunciado.
+- `tests/validar.py`: confere os resultados dos executáveis.
+- `tests/benchmark.py`: mede a versão sequencial e diferentes números de threads.
+- `results/`: registros dos testes e das medições.
+- `slides/apresentacao.pdf`: slides da apresentação.
 
-**Ambiente:** Alpine Linux 3.24.1, GCC 15.2.0, QEMU/TCG, quatro CPUs virtuais
-e 2 GiB de RAM. São resultados de emulação, não de desempenho nativo.
-Houve variação entre amostras; essa medição não garante a mesma aceleração
-em outra máquina ou matriz. Oito threads não melhoraram a mediana neste teste.
+As duas versões usam flood fill iterativo. Na paralela, divido a matriz em
+faixas de linhas. Cada thread identifica os grupos dentro da própria faixa,
+sem escrever nas linhas das outras threads. Depois dos `pthread_join`, a
+thread principal compara as duas linhas de cada fronteira, incluindo as
+diagonais, e junta os grupos que têm o mesmo objeto. Assim, um objeto que
+atravessa várias faixas é contado uma vez. Como essa etapa acontece depois
+dos `join`, o Union-Find é alterado por uma única thread.
 
-Os tempos brutos estão em `results/desempenho.csv`; configuração, seed e
-hashes estão em `results/desempenho.json`. A matriz grande é recriada pelo
-benchmark. Os scripts também geram relatórios Markdown localmente.
+## Testes e resultados
 
-## Observações e referências
+`make test` verifica as cinco matrizes obrigatórias, casos de fronteira e
+diagonais, matrizes pequenas e casos aleatórios. Também confere se entradas
+inválidas são recusadas. A referência usada nos testes é independente do
+flood fill do programa.
 
-O programa mantém a matriz e as estruturas auxiliares na RAM. Não foi
-testado em macOS; a execução foi verificada em Linux emulado.
+Os cinco resultados pedidos no enunciado são 3, 4, 5, 6 e 7 objetos. O arquivo
+O workflow da aba [Actions](https://github.com/Idalencio/Sisop---T1/actions)
+compila, testa e mede o projeto em um runner Linux quando o código muda.
+Quando tudo passa na branch `main`, ele atualiza os relatórios em `results/`.
+Se um teste falhar, os arquivos parciais ficam como artefato da execução, sem
+substituir os últimos resultados aprovados.
 
-Os slides não estão incluídos neste repositório. O enunciado pede o PDF da
-apresentação na entrega final; esse item continua pendente. O link ainda
-não foi enviado ao Moodle.
+O benchmark mede uma matriz maior, com os mesmos dados na versão sequencial
+e nas versões paralelas. Faz aquecimento, repete as medições e usa a mediana.
+Os resultados salvos em `results/desempenho.md` foram obtidos em 10/09/2026
+no Alpine Linux emulado pelo QEMU/TCG, com quatro CPUs virtuais. Nessa amostra,
+quatro threads tiveram a menor mediana; oito threads foram mais lentas que
+quatro. Esses tempos descrevem aquela máquina emulada, não o desempenho nativo
+do computador. O relatório contém as amostras e explica essa limitação.
 
-- [Enunciado do trabalho](https://moodle.pucrs.br/mod/resource/view.php?id=3903921)
-- [POSIX: pthread_create](https://pubs.opengroup.org/onlinepubs/000095399/functions/pthread_create.html)
-- [POSIX: pthread_join](https://pubs.opengroup.org/onlinepubs/009695399/functions/pthread_join.html)
-- [clock_gettime](https://man7.org/linux/man-pages/man3/clock_gettime.3.html)
+## Referências e ferramentas
 
-Ferramentas utilizadas: compilador C, Pthreads, Python e Valgrind.
-Houve assistência do ChatGPT/Codex na implementação, nos testes e na documentação.
+Usei Pthreads e o relógio POSIX `CLOCK_MONOTONIC`. Também usei Python para
+automatizar testes e medições. ChatGPT/Codex auxiliaram na implementação,
+revisão e preparação dos slides. O código e os resultados precisam ser
+compreendidos e conferidos pelo autor antes da apresentação.
+
