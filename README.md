@@ -36,7 +36,6 @@ número de linhas para não criar faixas vazias.
 - `tests/benchmark.py`: mede a versão sequencial e diferentes números de threads.
 - `results/`: registros dos testes e das medições.
 - `slides/apresentacao.pdf`: slides da apresentação.
-- `ROTEIRO_APRESENTACAO.md`: falas sugeridas e perguntas para ensaiar.
 
 As duas versões usam flood fill iterativo. Na paralela, divido a matriz em
 faixas de linhas. Cada thread identifica os grupos dentro da própria faixa,
