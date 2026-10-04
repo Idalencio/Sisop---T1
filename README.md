@@ -52,8 +52,8 @@ diagonais, matrizes pequenas e casos aleatórios. Também confere se entradas
 inválidas são recusadas. A referência usada nos testes é independente do
 flood fill do programa.
 
-Os cinco resultados pedidos no enunciado são 3, 4, 5, 6 e 7 objetos. O arquivo
-O workflow da aba [Actions](https://github.com/Idalencio/Sisop---T1/actions)
+Os cinco resultados pedidos no enunciado são 3, 4, 5, 6 e 7 objetos. O workflow
+da aba [Actions](https://github.com/Idalencio/Sisop---T1/actions)
 compila, testa e mede o projeto em um runner Linux quando o código muda.
 Quando tudo passa na branch `main`, ele atualiza os relatórios em `results/`.
 Se um teste falhar, os arquivos parciais ficam como artefato da execução, sem
@@ -61,11 +61,13 @@ substituir os últimos resultados aprovados.
 
 O benchmark mede uma matriz maior, com os mesmos dados na versão sequencial
 e nas versões paralelas. Faz aquecimento, repete as medições e usa a mediana.
-Os resultados salvos em `results/desempenho.md` foram obtidos em 10/09/2026
-no Alpine Linux emulado pelo QEMU/TCG, com quatro CPUs virtuais. Nessa amostra,
-quatro threads tiveram a menor mediana; oito threads foram mais lentas que
-quatro. Esses tempos descrevem aquela máquina emulada, não o desempenho nativo
-do computador. O relatório contém as amostras e explica essa limitação.
+Os resultados salvos em `results/desempenho.md` foram obtidos no GitHub Actions,
+em um runner `ubuntu-latest` com quatro CPUs lógicas. As medianas foram 0,02623 s
+no sequencial, 0,01518 s com duas threads, 0,01226 s com quatro e 0,01230 s com
+oito. Nesse teste, quatro threads tiveram speedup de 2,140x e oito, 2,132x; a
+diferença é pequena. É uma única matriz numa máquina virtual hospedada, então
+os tempos valem para esse ambiente e não preveem o desempenho em qualquer
+computador. O relatório contém as amostras e explica essa limitação.
 
 ## Referências e ferramentas
 
