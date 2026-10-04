@@ -1,15 +1,15 @@
 {
   "status": "PASSOU",
-  "data_utc": "2026-09-10T21:34:20.810565+00:00",
+  "data_utc": "2026-10-04T20:18:57.263514+00:00",
   "maquina": {
-    "sistema": "Linux-6.18.35-0-virt-x86_64-with-musl1",
+    "sistema": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
     "arquitetura": "x86_64",
-    "processador": "",
+    "processador": "x86_64",
     "cpus_logicas": 4,
-    "python": "3.14.7",
-    "ambiente_de_execucao_informado": "Alpine Linux 3.24.1 em QEMU TCG x86_64 local, 4 vCPUs, 2 GiB RAM; emulacao, nao desempenho nativo",
+    "python": "3.12.3",
+    "ambiente_de_execucao_informado": "GitHub-hosted runner ubuntu-latest (Linux)",
     "compilador_comando": "cc",
-    "flags_de_compilacao_informadas": "-O2 -std=c89 -Wall -Wextra -pedantic -Werror -pthread",
+    "flags_de_compilacao_informadas": "-O2 -std=c89 -Wall -Wextra -Werror -pedantic -pthread",
     "nota_flags": "As flags sao informadas pelo comando; conferir o log real da compilacao.",
     "cpus_permitidas_afinidade": [
       0,
@@ -17,9 +17,9 @@
       2,
       3
     ],
-    "modelo_cpu": "QEMU TCG CPU version 2.5+",
-    "memoria_total": "MemTotal:        2024064 kB",
-    "compilador_versao": "cc (Alpine 15.2.0) 15.2.0\nCopyright (C) 2025 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+    "modelo_cpu": "AMD EPYC 7763 64-Core Processor",
+    "memoria_total": "MemTotal:       16373448 kB",
+    "compilador_versao": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
     "compilador_consulta_codigo": 0
   },
   "matriz": {
@@ -42,8 +42,8 @@
     "justificativa_mediana": "Reduz a influencia de uma execucao isoladamente lenta, sem escolher o melhor tempo."
   },
   "binarios_sha256": {
-    "sequencial": "c778b97c95381193b77ea107aeff2fe12a1a624b3d9bc0ad2328510bc4b2b914",
-    "paralelo": "c1cca9210d84793400ae6efe17c14aada8f858be05038216597e11750daed173"
+    "sequencial": "d54d27d211e236b7f936cd04f1ce6f746a73e3396c44165b396751ac3c8958ed",
+    "paralelo": "33a2a5baec38849a35c9f21c6e6e7afd64a1f4fae1312c0f0ce6374e10b439ca"
   },
   "configuracoes": [
     {
@@ -51,9 +51,9 @@
       "threads_solicitadas": 0,
       "threads_efetivas": 0,
       "repeticoes": 5,
-      "mediana_s": 0.317325669,
-      "minimo_s": 0.262813266,
-      "maximo_s": 0.595341406,
+      "mediana_s": 0.026225763,
+      "minimo_s": 0.025305388,
+      "maximo_s": 0.026701345,
       "speedup": 1.0
     },
     {
@@ -61,30 +61,30 @@
       "threads_solicitadas": 2,
       "threads_efetivas": 2,
       "repeticoes": 5,
-      "mediana_s": 0.27501196,
-      "minimo_s": 0.239069914,
-      "maximo_s": 0.421328366,
-      "speedup": 1.1538613411576717
+      "mediana_s": 0.015177855,
+      "minimo_s": 0.014524369,
+      "maximo_s": 0.017437582,
+      "speedup": 1.7278965308339023
     },
     {
       "modo": "paralelo",
       "threads_solicitadas": 4,
       "threads_efetivas": 4,
       "repeticoes": 5,
-      "mediana_s": 0.192030292,
-      "minimo_s": 0.187359316,
-      "maximo_s": 0.361749008,
-      "speedup": 1.6524771466785042
+      "mediana_s": 0.012257063,
+      "minimo_s": 0.010390507,
+      "maximo_s": 0.014567229,
+      "speedup": 2.1396449540970783
     },
     {
       "modo": "paralelo",
       "threads_solicitadas": 8,
       "threads_efetivas": 8,
       "repeticoes": 5,
-      "mediana_s": 0.207392972,
-      "minimo_s": 0.173738357,
-      "maximo_s": 0.381865758,
-      "speedup": 1.530069538711273
+      "mediana_s": 0.012298876,
+      "minimo_s": 0.010836483,
+      "maximo_s": 0.013684584,
+      "speedup": 2.1323707142018504
     }
   ],
   "objetos": 7909,
