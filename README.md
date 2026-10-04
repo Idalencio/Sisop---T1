@@ -36,6 +36,7 @@ número de linhas para não criar faixas vazias.
 - `tests/benchmark.py`: mede a versão sequencial e diferentes números de threads.
 - `results/`: registros dos testes e das medições.
 - `slides/apresentacao.pdf`: slides da apresentação.
+- `ROTEIRO_APRESENTACAO.md`: falas sugeridas e perguntas para ensaiar.
 
 As duas versões usam flood fill iterativo. Na paralela, divido a matriz em
 faixas de linhas. Cada thread identifica os grupos dentro da própria faixa,
@@ -73,6 +74,7 @@ computador. O relatório contém as amostras e explica essa limitação.
 
 Usei Pthreads e o relógio POSIX `CLOCK_MONOTONIC`. Também usei Python para
 automatizar testes e medições. ChatGPT/Codex auxiliaram na implementação,
-revisão e preparação dos slides. O código e os resultados precisam ser
-compreendidos e conferidos pelo autor antes da apresentação.
+revisão e preparação dos slides. A ilustração da capa foi gerada com IA. O
+código e os resultados precisam ser compreendidos e conferidos pelo autor antes
+da apresentação.
 
